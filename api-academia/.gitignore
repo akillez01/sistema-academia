@@ -1,0 +1,7 @@
+node_modules/
+.env
+serviceAccountKey.json
+*.log
+dist/
+serviceAccountKey.json
+academia-pro-b0a4b-firebase-adminsdk-fbsvc-175206ca0e.json
