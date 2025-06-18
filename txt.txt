@@ -1,0 +1,14 @@
+cd /home/achilles/Documentos/academia/app-academia/api-academia
+
+# Para listar todos os usuários do Firebase Auth
+npx ts-node scripts/deleteUser.ts
+
+# Para deletar o usuário específico
+npx ts-node scripts/deleteUser.ts joao@email.com
+
+
+cd /home/achilles/Documentos/academia/app-academia/api-academia
+npx ts-node scripts/syncUsersToFirestore.ts
+
+
+curl http://localhost:3001/api/users

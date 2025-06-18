@@ -14,21 +14,30 @@ export default function Membros() {
   async function adicionarMembro(e: React.FormEvent) {
     e.preventDefault();
     setMensagem("");
-    const res = await fetch("http://localhost:3001/api/users", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome, email, status, senha }),
-    });
-    if (res.ok) {
-      setMensagem("Membro adicionado com sucesso!");
-      setNome("");
-      setEmail("");
-      setSenha("");
-      setStatus("Ativo");
-      setShowForm(false);
-      setReload((r) => r + 1); // força recarregar tabela
-    } else {
-      setMensagem("Erro ao adicionar membro");
+    try {
+      console.log("Enviando dados:", { nome, email, senha, status });
+      const res = await fetch("http://localhost:3001/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nome, email, senha, status }),
+      });
+      
+      if (res.ok) {
+        setMensagem("Membro adicionado com sucesso!");
+        setNome("");
+        setEmail("");
+        setSenha("");
+        setStatus("Ativo");
+        setShowForm(false);
+        setReload((r) => r + 1); // força recarregar tabela
+      } else {
+        const errorData = await res.json();
+        console.error("Erro da API:", errorData);
+        setMensagem(`Erro ao adicionar membro: ${errorData.error || errorData.details || "Erro desconhecido"}`);
+      }
+    } catch (error) {
+      console.error("Erro ao fazer requisição:", error);
+      setMensagem(`Erro ao adicionar membro: ${error instanceof Error ? error.message : "Erro desconhecido"}`);
     }
   }
 

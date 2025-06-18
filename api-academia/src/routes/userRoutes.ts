@@ -7,11 +7,15 @@ const router = Router();
 // Listar todos os usuários
 router.get("/", async (req, res) => {
   try {
+    console.log("Buscando todos os usuários...");
     const snapshot = await db.collection("users").get();
     const users = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    console.log(`Encontrados ${users.length} usuários no Firestore.`);
     res.json(users);
   } catch (error) {
-    res.status(500).json({ error: "Erro ao buscar usuários" });
+    const err = error as Error;
+    console.error("Erro ao buscar usuários:", err.message);
+    res.status(500).json({ error: "Erro ao buscar usuários", details: err.message });
   }
 });
 

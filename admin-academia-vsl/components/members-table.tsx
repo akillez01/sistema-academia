@@ -10,16 +10,37 @@ import { useEffect, useState } from "react"
 
 // Função para buscar membros reais da API
 async function fetchMembers() {
-  const res = await fetch("http://localhost:3001/api/users")
-  if (!res.ok) return []
-  return res.json()
+  try {
+    console.log("Buscando membros da API...")
+    const res = await fetch("http://localhost:3001/api/users")
+    if (!res.ok) {
+      console.error("Erro ao buscar membros:", res.status, res.statusText)
+      return []
+    }
+    const users = await res.json()
+    console.log("Membros encontrados:", users.length, users)
+    return users
+  } catch (error) {
+    console.error("Erro ao buscar membros:", error)
+    return []
+  }
 }
 
 export function MembersTable({ reload }: { reload?: number }) {
   const [members, setMembers] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetchMembers().then(setMembers)
+    setLoading(true)
+    fetchMembers()
+      .then(users => {
+        setMembers(users)
+        setLoading(false)
+      })
+      .catch(err => {
+        console.error("Erro no useEffect:", err)
+        setLoading(false)
+      })
   }, [reload])
 
   return (
